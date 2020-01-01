@@ -1,0 +1,24 @@
+version: '2'
+services:
+  celery:
+    build:
+      dockerfile: DockerfileCelery
+      context: .
+    image: celery:latest
+    environment:
+      C_FORCE_ROOT: "true"
+    links:
+    - redisserver:redisserver
+  web:
+    build:
+      context: .
+      dockerfile: DockerfileWebApi
+    image: flask_api:latest
+    working_dir: /app
+    ports:
+      - "5000:80"
+    links:
+    - redisserver:redisserver
+    - celery:celery
+  redisserver:
+    image: redis

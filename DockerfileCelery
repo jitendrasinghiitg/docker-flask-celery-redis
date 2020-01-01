@@ -1,0 +1,12 @@
+FROM python:3.6
+
+LABEL maintainer="Jitendra Singh <jitendra.singh.iitg@gmail.com>"
+
+ENV C_FORCE_ROOT=true  REDISSERVER=redis://redisserver:6379
+
+COPY requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+COPY ./celery /celery_tasks
+WORKDIR /celery_tasks
+
+ENTRYPOINT celery -A tasks worker -P eventlet -c 4 --loglevel=info

@@ -45,6 +45,17 @@ curl -X GET \
 
 ```
 we get status of the task ,and on completion it will return the final output of api
+
+when task is in PROGRESS we get:
+```
+{
+    "current": 1,
+    "state": "PROGRESS",
+    "status": "{'done': 4, 'total': 60}",
+    "total": 1
+}
+```
+when task is in Completed we get:
 ```
 {
     "result": "hello jitendra",

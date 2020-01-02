@@ -15,18 +15,32 @@ def predict():
     input1 = request.get_json()
     Name = input1["name"]
     task = celery.send_task('hello.task', args=[Name], kwargs={})
-    print(task.id)
     return jsonify(dict(id=task.id, url=url_for('check_task', id=task.id, _external=True)))
 
 
 @app.route('/check/<string:id>')
 def check_task(id):
-    res = celery.AsyncResult(id)
-    if res.state == states.SUCCESS:
-        output = res.result
+    task = celery.AsyncResult(id)
+    if task.state == 'PENDING':
+        # job did not start yet
+        response = {
+            'state': task.state,
+            'current': task.info.get('current', 0),
+            'total': task.info.get('total', 1),
+            'status': 'Pending...'
+        }
+    elif task.state == 'SUCCESS':
+        output = task.result
         return jsonify(output)
     else:
-        return jsonify({'status': res.state})
+        # something went wrong in the background job
+        response = {
+            'state': task.state,
+            'current': 1,
+            'total': 1,
+            'status': str(task.info),
+        }
+    return jsonify(response)
 
 
 if __name__ == '__main__':

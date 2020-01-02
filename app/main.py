@@ -1,3 +1,4 @@
+import json
 import celery.states as states
 from flask import Flask, request, jsonify, url_for
 from worker import celery
@@ -13,27 +14,29 @@ def welcome():
 @app.route("/hello_world", methods=['POST'])
 def predict():
     input1 = request.get_json()
-    Name = input1["name"]
-    task = celery.send_task('hello.task', args=[Name], kwargs={})
+    name = input1["name"]
+    task = celery.send_task('hello.task', args=[name], kwargs={})
     return jsonify(dict(id=task.id, url=url_for('check_task', id=task.id, _external=True)))
 
 
 @app.route('/check/<string:id>')
 def check_task(id):
     task = celery.AsyncResult(id)
-    if task.state == 'PENDING':
-        # job did not start yet
+    if task.state == 'SUCCESS':
         response = {
-            'state': task.state,
-            'status': 'Pending...'
+            'status': task.state,
+            'result': task.result,
+            'task_id': id
         }
-    elif task.state == 'SUCCESS':
-        output = task.result
-        return jsonify(output)
+    elif task.state == 'FAILURE':
+        response = json.loads(task.backend.get(task.backend.get_key_for_task(task.id)).decode('utf-8'))
+        del response['children']
+        del response['traceback']
     else:
         response = {
-            'state': task.state,
-            'status': str(task.info)
+            'status': task.state,
+            'result': task.info,
+            'task_id': id
         }
     return jsonify(response)
 

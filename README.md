@@ -46,18 +46,52 @@ curl -X GET \
 ```
 we get status of the task ,and on completion it will return the final output of api
 
-when task is in PROGRESS we get:
+when task is in PROGRESS state we get:
 ```
 {
-    "state": "PROGRESS",
-    "status": "{'done': 5, 'total': 60}"
+    "result": {
+        "done": 11,
+        "total": 60
+    },
+    "status": "PROGRESS",
+    "task_id": "975f0930-c733-41a7-8e94-e9902aef687d"
 }
 ```
-when task is in Completed we get:
+when task is in Completed state we get:
 ```
 {
-    "result": "hello jitendra",
-    "status": "COMPLETED"
+    "result": {
+        "result": "hello jitendra"
+    },
+    "status": "SUCCESS",
+    "task_id": "975f0930-c733-41a7-8e94-e9902aef687d"
 }
 ```
 
+when task is in FAILURE state we get:
+```
+{
+    "date_done": "2020-01-02T05:46:38.304535",
+    "result": {
+        "exc_message": [
+            "Traceback (most recent call last):",
+            "  File \"/celery_tasks/tasks.py\", line 17, in hello_world",
+            "    k = 1 / 0",
+            "ZeroDivisionError: division by zero",
+            ""
+        ],
+        "exc_type": "ZeroDivisionError"
+    },
+    "status": "FAILURE",
+    "task_id": "fd6e2e7e-2c97-4841-96c1-abd6e44dba89"
+}
+```
+FAILURE state can be reproduced :
+```
+curl -X POST \
+  http://localhost:5000/hello_world \
+  -H 'content-type: application/json' \
+  -d '{
+	"name":"name"	
+}'
+```

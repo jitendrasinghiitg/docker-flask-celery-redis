@@ -49,10 +49,8 @@ we get status of the task ,and on completion it will return the final output of 
 when task is in PROGRESS we get:
 ```
 {
-    "current": 1,
     "state": "PROGRESS",
-    "status": "{'done': 4, 'total': 60}",
-    "total": 1
+    "status": "{'done': 5, 'total': 60}"
 }
 ```
 when task is in Completed we get:

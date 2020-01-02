@@ -14,10 +14,10 @@ def hello_world(self, Name):
         for i in range(60):
             time.sleep(1)
             self.update_state(state='PROGRESS', meta={'done': i, 'total': 60})
-        return {"status": "COMPLETED", "result": "hello {}".format(str(Name))}
+        return {"state": "COMPLETED", "result": "hello {}".format(str(Name))}
     except Exception as ex:
         self.update_state(state=states.FAILURE, meta={'custom': '...'})
-        return {"status": "FAILURE", "meta":{
+        return {"state": "FAILURE", "meta":{
                 'exc_type': type(ex).__name__,
                 'exc_message': traceback.format_exc().split('\n')
             }}

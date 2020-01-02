@@ -25,20 +25,15 @@ def check_task(id):
         # job did not start yet
         response = {
             'state': task.state,
-            'current': task.info.get('current', 0),
-            'total': task.info.get('total', 1),
             'status': 'Pending...'
         }
     elif task.state == 'SUCCESS':
         output = task.result
         return jsonify(output)
     else:
-        # something went wrong in the background job
         response = {
             'state': task.state,
-            'current': 1,
-            'total': 1,
-            'status': str(task.info),
+            'status': str(task.info)
         }
     return jsonify(response)
 

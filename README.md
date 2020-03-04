@@ -23,7 +23,7 @@ curl --request POST \
   --url http://localhost:5000/hello_world \
   --header 'content-type: application/json' \
   --data '{
-    "message": "jitendra"
+    "name": "jitendra"
   }'
 ```
 **Response**

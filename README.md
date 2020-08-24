@@ -11,7 +11,7 @@ sh local_env_up.sh
 ```
 ###### content of local_env_up.sh
 ```
-sudo docker-compose -f docker-compose.yml up -d --build
+sudo docker-compose -f docker-compose.yml up --scale celery=4 --build
 ```
 
 It starts a webservice with rest api and listens for messages at localhost:5000

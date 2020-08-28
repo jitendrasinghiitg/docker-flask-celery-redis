@@ -2,7 +2,7 @@ import time
 import datetime
 import os, traceback
 from celery import Celery, states
-from celery.exceptions import Ignore
+
 
 CELERY_BROKER_URL = os.getenv("REDISSERVER", "redis://redis_server:6379")
 CELERY_RESULT_BACKEND = os.getenv("REDISSERVER", "redis://redis_server:6379")
@@ -26,4 +26,4 @@ def hello_world(self, name):
                 'exc_type': type(ex).__name__,
                 'exc_message': traceback.format_exc().split('\n')
             })
-        raise Ignore()
+        raise ex

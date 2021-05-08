@@ -3,4 +3,4 @@ Flask-Cors==3.0.8
 Flask-WTF==0.14.2
 redis==3.3.11
 celery==4.4.0
-eventlet==0.25.1
+eventlet==0.31.0
